@@ -13,7 +13,7 @@ yarn global add generator-cratebind-react
 Then generate your new project:
 
 ```bash
-yo cratebind-react
+yo cratebind-react my-project-name
 ```
 
 ## Getting To Know Yeoman
