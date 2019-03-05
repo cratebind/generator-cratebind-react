@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "Matt Wood",
+      "authorEmail": "matt@cratebind.com",
+      "authorUrl": "https://github.com/cratebind"
+    }
+  }
+}
