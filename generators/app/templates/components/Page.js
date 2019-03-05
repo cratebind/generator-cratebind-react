@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
+import PropTypes from 'prop-types';
 import Header from './Header';
 import Meta from './Meta';
+import { GlobalStyle } from './GlobalStyle';
 
-const theme = {
+export const theme = {
   red: '#FF0000',
   black: '#393939',
   grey: '#3A3A3A',
@@ -24,40 +26,14 @@ const Inner = styled.div`
   display: flex;
 `;
 
-const GlobalStyle = createGlobalStyle`
-  html {
-    box-sizing: border-box;
-    font-size: 16px;
-  }
-
-  *, *:before, *:after {
-    box-sizing: inherit;
-  }
-
-  body {
-    padding: 0;
-    margin: 0;
-    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-  }
-
-  input {
-    font-size: 16px;
-  }
-
-  select {
-    -webkit-appearance: menulist !important;
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
-  fieldset {
-    all: unset;
-    display: block;
-  }
-`;
-
 class Page extends Component {
+  static propTypes = {
+    children: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.node),
+      PropTypes.node,
+    ]),
+  };
+
   render() {
     const { children } = this.props;
     return (

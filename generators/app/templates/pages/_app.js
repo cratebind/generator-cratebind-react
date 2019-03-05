@@ -3,11 +3,16 @@ import { ApolloProvider } from 'react-apollo';
 import Page from '../components/Page';
 import withApollo from '../lib/withApollo';
 import AppProvider from '../components/AppContext';
-import ErrorBoundary from '../components/ErrorBoundary';
+import ErrorFallback from '../components/ErrorFallback';
+import handleError from '../lib/handleError';
 
 class MyApp extends App {
+  state = {
+    hasError: false,
+    errorEventId: undefined,
+  };
+
   static async getInitialProps({ Component, ctx }) {
-    console.log('GETTING INITIAL PROPS');
     let pageProps = {};
 
     if (Component.getInitialProps) {
@@ -19,24 +24,47 @@ class MyApp extends App {
     return { pageProps };
   }
 
+  static getDerivedStateFromProps(props, state) {
+    // If there was an error generated within getInitialProps, and we haven't
+    // yet seen an error, we add it to this.state here
+    return {
+      hasError: props.hasError || state.hasError || false,
+      errorEventId: props.errorEventId || state.errorEventId || undefined,
+    };
+  }
+
+  static getDerivedStateFromError() {
+    // React Error Boundary here allows us to set state flagging the error (and
+    // later render a fallback UI).
+    return { hasError: true };
+  }
+
   componentDidCatch(error, errorInfo) {
-    console.log({ error, errorInfo });
+    handleError(error, errorInfo);
   }
 
   render() {
     const { Component, apolloClient, pageProps } = this.props;
+    const { hasError } = this.state;
+
+    if (hasError) {
+      // return <Error />;
+      return (
+        <Container>
+          <ErrorFallback />
+        </Container>
+      );
+    }
 
     return (
       <Container>
-        <ErrorBoundary>
-          <AppProvider activeTeam={pageProps.activeTeam}>
-            <ApolloProvider client={apolloClient}>
-              <Page>
-                <Component {...pageProps} />
-              </Page>
-            </ApolloProvider>
-          </AppProvider>
-        </ErrorBoundary>
+        <AppProvider activeTeam={pageProps.activeTeam}>
+          <ApolloProvider client={apolloClient}>
+            <Page>
+              <Component {...pageProps} />
+            </Page>
+          </ApolloProvider>
+        </AppProvider>
       </Container>
     );
   }

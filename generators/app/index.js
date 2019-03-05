@@ -45,4 +45,10 @@ module.exports = class extends Generator {
       npm: false
     });
   }
+
+  end() {
+    this.log(
+      "Your project has been built. Use `yarn dev` to start a development server."
+    );
+  }
 };
